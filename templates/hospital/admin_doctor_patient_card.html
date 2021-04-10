@@ -14,8 +14,8 @@
     }
 
     .title {
-      color: grey;
-      font-size: 18px;
+      color: black;
+      font-size: 20px;
     }
 
     button {
@@ -47,7 +47,7 @@
     }
 
     a {
-      color: white;
+      /* color: white; */
     }
   </style>
 </head>
@@ -57,33 +57,27 @@
 
 
   <div class="grid-container">
-    <div class="grid-item">
-      <div class="card">
-        <img src="{% static "images/admin.png" %}" alt="John" style="width:100%">
-        <p class="title">ADMIN</p>
-        <p><button><a href="/adminclick">View</a></button></p>
-      </div>
-
-    </div>
 
     <div class="grid-item">
       <div class="card">
-        <img src="{% static "images/doctor.png" %}" alt="John" style="width:100%">
-        <p class="title">DOCTOR</p>
-        <p><button><a href="/doctorclick">View</a></button></p>
+        <a href="/adminclick" title="ADMIN"><p><img src="{% static "images/Admin.png" %}" alt="John" style="width:100%"></p><p class="title">ADMIN</p></a>
       </div>
     </div>
 
     <div class="grid-item">
       <div class="card">
-        <img src="{% static "images/patient.jpg" %}" alt="John" style="width:100%">
-        <p class="title">PATIENT</p>
-        <p><button><a href="/patientclick">View</a></button></p>
+        <a href="/doctorclick" title="DOCTOR"><p><img src="{% static "images/Doctor.png" %}" alt="John" style="width:100%"></p><p class="title">DOCTOR</p></a>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <a href="/patientclick" title="PATIENT"><p><img src="{% static "images/Patient.png" %}" alt="John" style="width:100%"></p><p class="title">PATIENT</p></a>
       </div>
     </div>
 
   </div>
-  
+
 </body>
 
 </html>
