@@ -29,7 +29,7 @@
     }
 
     .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
+      background: linear-gradient(45deg, #0075fc, #73b4ff);
     }
 
     .bg-c-green {
@@ -37,11 +37,11 @@
     }
 
     .bg-c-yellow {
-      background: linear-gradient(45deg, #FFB64D, #ffcb80);
+      background: linear-gradient(45deg, #e98800, #ffcb80);
     }
 
     .bg-c-pink {
-      background: linear-gradient(45deg, #FF5370, #ff869a);
+      background: linear-gradient(45deg, #e01134, #ff869a);
     }
 
 
@@ -52,6 +52,10 @@
       border: none;
       margin-bottom: 30px;
       -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+    .card:hover {
+      opacity: 0.8;
       transition: all 0.3s ease-in-out;
     }
 
@@ -71,17 +75,16 @@
       float: right;
     }
   </style>
+  
 </head>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
   <div class="row">
     <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-blue order-card">
+      <div class="card bg-c-blue order-card" style="cursor: pointer;" onclick="window.location='/admin-view-doctor'">
         <div class="card-block">
-          <a href="/admin-view-doctor">
-            <h6 class="m-b-20">Doctor Record</h6>
-          </a>
+          <h6 class="m-b-20">Doctor Record</h6>
           <br>
           <h2 class="text-right"><i class="fas fa-user-nurse f-left"></i></h2>
 
@@ -89,7 +92,7 @@
       </div>
     </div>
 
-    <div class="col-md-4 col-xl-3">
+    <!-- <div class="col-md-4 col-xl-3">
       <div class="card bg-c-green order-card">
         <div class="card-block">
           <a href="/admin-add-doctor">
@@ -99,14 +102,12 @@
           <h2 class="text-right"><i class="fas fa-user-plus f-left"></i></h2>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-yellow order-card">
+      <div class="card bg-c-yellow order-card" style="cursor: pointer;" onclick="window.location='/admin-approve-doctor'">
         <div class="card-block">
-          <a href="/admin-approve-doctor">
-            <h6 class="m-b-20">Approve Doctor</h6>
-          </a>
+          <h6 class="m-b-20">Approve Doctor</h6>
           <br>
           <h2 class="text-right"><i class="fas fa-check-circle f-left"></i></h2>
         </div>
@@ -114,11 +115,9 @@
     </div>
 
     <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-pink order-card">
+      <div class="card bg-c-pink order-card" style="cursor: pointer;" onclick="window.location='/admin-view-doctor-specialisation'">
         <div class="card-block">
-          <a href="/admin-view-doctor-specialisation">
-            <h6 class="m-b-20">Doctor Specialisation</h6>
-          </a>
+          <h6 class="m-b-20">Doctor Specialisation</h6>
           <br>
           <h2 class="text-right"><i class="fas fa-user-md f-left"></i></h2>
         </div>
@@ -126,10 +125,5 @@
     </div>
   </div>
 </div>
-<!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/lazycoders
-  -->
 <br><br><br><br><br><br><br>
 {% endblock content %}

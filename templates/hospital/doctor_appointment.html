@@ -26,11 +26,11 @@
     }
 
     .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
+      background: linear-gradient(45deg, #0075fc, #73b4ff);
     }
 
     .bg-c-green {
-      background: linear-gradient(45deg, #2ed8b6, #59e0c5);
+      background: linear-gradient(45deg, #02866c, #59e0c5);
     }
 
     .card {
@@ -40,6 +40,11 @@
       border: none;
       margin-bottom: 30px;
       -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      opacity: 0.8;
       transition: all 0.3s ease-in-out;
     }
 
@@ -65,11 +70,9 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 col-xl-6">
-        <div class="card bg-c-blue order-card">
+        <div class="card bg-c-blue order-card" style="cursor: pointer;" onclick="window.location='/doctor-view-appointment'">
           <div class="card-block">
-            <a href="/doctor-view-appointment">
-              <h6 class="m-b-20">View Your Appointment</h6>
-            </a>
+            <h6 class="m-b-20">View Your Appointment</h6>
             <br>
             <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
 
@@ -78,11 +81,9 @@
       </div>
 
       <div class="col-md-4 col-xl-6">
-        <div class="card bg-c-green order-card">
+        <div class="card bg-c-green order-card" style="cursor: pointer;" onclick="window.location='/doctor-delete-appointment'">
           <div class="card-block">
-            <a href="/doctor-delete-appointment">
-              <h6 class="m-b-20">Delete Appointment</h6>
-            </a>
+            <h6 class="m-b-20">Delete Appointment</h6>
             <br>
             <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>
           </div>
@@ -92,10 +93,6 @@
 
     </div>
   </div>
-  <!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/lazycoders
-  -->
+
 <br><br><br><br><br><br><br>
 {% endblock content %}
