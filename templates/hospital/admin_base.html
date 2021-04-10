@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>DBS</title>
+  <title>Hospital Managment</title>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -31,14 +31,8 @@
 
 
 
-    /*---------------------------------------
-       Social section
-    -----------------------------------------*/
-    footer {
-      padding: 0px 0px 0px 0px;
-      background-color: black;
-      margin: 0px;
-    }
+    
+    
 
 
     #ftr {
@@ -61,26 +55,7 @@
       text-decoration: none;
     }
 
-    .fa-facebook {
-      background: #3B5998;
-      color: white;
-      margin-top: 30px;
-    }
-
-    .fa-whatsapp {
-      background: #25d366;
-      color: white;
-    }
-
-    .fa-twitter {
-      background: #55ACEE;
-      color: white;
-    }
-
-    .fa-instagram {
-      background: #125688;
-      color: white;
-    }
+    
 
     p {
       text-align: center;
@@ -101,7 +76,7 @@
     }
 
     .menu {
-      background: black;
+      background: #5bc995;
       height: 100vh;
       width: 240px;
       position: fixed;
@@ -125,7 +100,6 @@
     .menu .avatar h2 {
       font-weight: normal;
       margin-bottom: 0;
-      color: rgb(255, 196, 0);
     }
     .menu ul {
       list-style: none;
@@ -156,7 +130,7 @@
     }
 
     .menu ul li:hover {
-      background-color: rgb(255, 196, 0);
+      background-color: rgba(0, 0, 0, 0.1);
     }
     .menu ul li:focus {
       outline: none;
@@ -240,7 +214,7 @@
         height: 40px;
         position: absolute;
         left: 100%;
-        background: black;
+        background: #5bc995;
       }
       .menu .smartphone-menu-trigger:before,
       .menu .smartphone-menu-trigger:after {
@@ -281,8 +255,9 @@
   <nav class="menu" tabindex="0">
     <div class="smartphone-menu-trigger"></div>
     <header class="avatar">
-      <img src="{% static "images/adminprofile.png" %}" />
+      <img src="{% static "images/adminpropic.png" %}" />
       <br><br>
+      <h6>Admin</h6>
       <h2>{{request.user.first_name}}</h2>
     </header>
     <ul>
@@ -298,8 +273,8 @@
 
     <!-- nav start -->
     <div class="bs-example">
-      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#8e00aa;">
-        <a href="/admin-dashboard" class="navbar-brand">HOSPITAL MANAGEMENT SYSTEM</a>
+      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
+        <a href="/admin-dashboard" class="navbar-brand">HOSPITAL MANAGEMENT</a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -323,7 +298,11 @@
     {% endblock content %}
     <!-- content end-->
 
+    <br><br><br><br>
+    
+
   </main>
+  
 
 </body>
 
