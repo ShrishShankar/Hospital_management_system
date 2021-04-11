@@ -729,7 +729,7 @@ def patient_book_appointment_view(request):
             desc=request.POST.get('description')
 
             doctor=models.Doctor.objects.get(user_id=request.POST.get('doctorId'))
-            
+            """
             if doctor.department == 'Cardiologist':
                 if 'heart' in desc:
                     pass
@@ -779,7 +779,7 @@ def patient_book_appointment_view(request):
                     message="Please Choose Doctor According To Disease"
                     return render(request,'hospital/patient_book_appointment.html',{'appointmentForm':appointmentForm,'patient':patient,'message':message})
 
-
+            """
 
 
 
