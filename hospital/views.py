@@ -88,10 +88,14 @@ def patient_signup_view(request):
             patient=patientForm.save(commit=False)
             patient.user=user
             patient.assignedDoctorId=request.POST.get('assignedDoctorId')
+            patient.status=True
+            print('blood group'+patient.bloodgroup)
             patient=patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
+
         return HttpResponseRedirect('patientlogin')
+        
     return render(request,'hospital/patientsignup.html',context=mydict)
 
 
@@ -119,11 +123,12 @@ def afterlogin_view(request):
         else:
             return render(request,'hospital/doctor_wait_for_approval.html')
     elif is_patient(request.user):
-        accountapproval=models.Patient.objects.all().filter(user_id=request.user.id,status=True)
+        """accountapproval=models.Patient.objects.all().filter(user_id=request.user.id,status=True)
         if accountapproval:
             return redirect('patient-dashboard')
         else:
-            return render(request,'hospital/patient_wait_for_approval.html')
+        return render(request,'hospital/patient_wait_for_approval.html')"""
+        return redirect('patient-dashboard')
 
 
 
@@ -156,7 +161,7 @@ def admin_dashboard_view(request):
     'doctorcount':doctorcount,
     'pendingdoctorcount':pendingdoctorcount,
     'patientcount':patientcount,
-    'pendingpatientcount':pendingpatientcount,
+    #'pendingpatientcount':pendingpatientcount,
     'appointmentcount':appointmentcount,
     'pendingappointmentcount':pendingappointmentcount,
     }
@@ -860,13 +865,3 @@ def contactus_view(request):
             return render(request, 'hospital/contactussuccess.html')
     return render(request, 'hospital/contactus.html', {'form':sub})
 
-
-#---------------------------------------------------------------------------------
-#------------------------ ADMIN RELATED VIEWS END ------------------------------
-#---------------------------------------------------------------------------------
-
-
-
-#Developed By : sumit kumar
-#facebook : fb.com/sumit.luv
-#Youtube :youtube.com/lazycoders
