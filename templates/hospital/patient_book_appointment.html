@@ -30,11 +30,24 @@
     .btnSubmit {
       border: none;
       border-radius: 1.5rem;
-      padding: 1%;
       width: 20%;
       cursor: pointer;
-      background: #0062cc;
+      background: #e0a500;
       color: #fff;
+      box-shadow: 0 5px #999;
+      padding: 15px 25px;
+      outline: none;
+      text-align: center;
+    }
+    .btnSubmit:hover {
+      background-color: #cc9600;
+      transition: 0.3s all;
+      }
+
+    .btnSubmit:active {
+      background-color: #966e00;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
     }
 
     .menu {
@@ -56,7 +69,7 @@
 {% endif %}
 
 
-<!------ add appointment page by patient(sumit)  ---------->
+<!------ add appointment page by patient  ---------->
 <form method="post">
   {% csrf_token %}
   <div class="container register-form">
@@ -85,11 +98,6 @@
     </div>
   </div>
 </form>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
 
 
 {% endblock content %}

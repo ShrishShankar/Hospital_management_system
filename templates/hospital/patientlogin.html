@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>LazyCoder || sumit</title>
+  <title>HMS</title>
 
 
   <style type="text/css">
@@ -41,11 +41,24 @@
     .btnSubmit {
       border: none;
       border-radius: 1.5rem;
-      padding: 1%;
       width: 20%;
       cursor: pointer;
-      background: #0062cc;
+      background: #0f6fff;
       color: #fff;
+      box-shadow: 0 5px #999;
+      padding: 15px 25px;
+      outline: none;
+      text-align: center;
+    }
+    .btnSubmit:hover {
+      background-color: #0068c9;
+      transition: 0.3s all;
+      }
+
+    .btnSubmit:active {
+      background-color: #004b92;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
     }
   </style>
 
@@ -57,7 +70,7 @@
   <br>
   <br><br>
 
-  <!--- login page for patient by admin(sumit)  ---------->
+  <!--- login page for patient by admin  ---------->
   <form method="post">
     {% csrf_token %}
     <div class="container register-form">
@@ -92,11 +105,6 @@
   </form>
 
   <br><br><br>
-  <!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/lazycoders
-  -->
 
   {% include "hospital/footer.html" %}
 </body>

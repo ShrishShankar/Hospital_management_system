@@ -40,11 +40,24 @@
     .btnSubmit {
       border: none;
       border-radius: 1.5rem;
-      padding: 1%;
       width: 20%;
       cursor: pointer;
-      background: #0062cc;
+      background: #e0a500;
       color: #fff;
+      box-shadow: 0 5px #999;
+      padding: 15px 25px;
+      outline: none;
+      text-align: center;
+    }
+    .btnSubmit:hover {
+      background-color: #cc9600;
+      transition: 0.3s all;
+      }
+
+    .btnSubmit:active {
+      background-color: #966e00;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
     }
   </style>
 
@@ -61,13 +74,13 @@
 
 
 
-  <!--- signup page for doctor by admin(sumit)  ---------->
+  <!--- signup page for doctor by admin  ---------->
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="container register-form">
       <div class="form">
         <div class="note">
-          <p>Register In Hospital</p>
+          <p>Apply to Hospital</p>
         </div>
 
         <div class="form-content">
@@ -103,7 +116,7 @@
 
             </div>
           </div>
-          <button type="submit" class="btnSubmit">Register</button>
+          <button type="submit" class="btnSubmit">Apply</button>
           <div class="text-center">Already have an account? <a href="doctorlogin">Login here</a></div>
         </div>
       </div>
@@ -113,10 +126,5 @@
 
   {% include "hospital/footer.html" %}
 </body>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
 
 </html>

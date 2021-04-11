@@ -27,7 +27,7 @@
     }
 
     .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
+      background: linear-gradient(45deg, #0075fc, #73b4ff);
     }
 
     .bg-c-green {
@@ -35,7 +35,7 @@
     }
 
     .bg-c-yellow {
-      background: linear-gradient(45deg, #FFB64D, #ffcb80);
+      background: linear-gradient(45deg, #e98800, #ffcb80);
     }
 
     .bg-c-pink {
@@ -50,6 +50,11 @@
       border: none;
       margin-bottom: 30px;
       -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      opacity: 0.8;
       transition: all 0.3s ease-in-out;
     }
 
@@ -75,11 +80,9 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-blue order-card">
+      <div class="card bg-c-blue order-card" style="cursor: pointer;" onclick="window.location='/admin-view-appointment'">
         <div class="card-block">
-          <a href="/admin-view-appointment">
-            <h6 class="m-b-20">View Appointment</h6>
-          </a>
+          <h6 class="m-b-20">View Appointment</h6>
           <br>
           <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
 
@@ -87,7 +90,7 @@
       </div>
     </div>
 
-    <div class="col-md-4 col-xl-4">
+    <!-- <div class="col-md-4 col-xl-4">
       <div class="card bg-c-green order-card">
         <div class="card-block">
           <a href="/admin-add-appointment">
@@ -97,14 +100,12 @@
           <h2 class="text-right"><i class="fas fa-book-medical f-left"></i></h2>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-yellow order-card">
+      <div class="card bg-c-yellow order-card" style="cursor: pointer;" onclick="window.location='/admin-approve-appointment'">
         <div class="card-block">
-          <a href="/admin-approve-appointment">
-            <h6 class="m-b-20">Approve Appointment</h6>
-          </a>
+          <h6 class="m-b-20">Approve Appointment</h6>
           <br>
           <h2 class="text-right"><i class="fas fa-check-circle f-left"></i></h2>
         </div>
@@ -114,10 +115,5 @@
 
   </div>
 </div>
-<!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/lazycoders
-  -->
   <br><br><br><br><br><br><br>
 {% endblock content %}

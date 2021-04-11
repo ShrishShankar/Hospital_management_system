@@ -139,7 +139,7 @@
       background-repeat: no-repeat;
       background-position: left 15px center;
       background-size: auto 20px;
-      transition: all 0.15s linear;
+      transition: all 0.2s ease-in-out;
       cursor: pointer;
     }
     .menu ul li.icon-dashboard {
@@ -156,7 +156,8 @@
     }
 
     .menu ul li:hover {
-      background-color: rgb(255, 196, 0);
+      transition: all 0.2s ease-in-out;
+      background: linear-gradient(45deg, rgb(37, 131, 0), rgb(101, 253, 0));
     }
     .menu ul li:focus {
       outline: none;
@@ -304,9 +305,8 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav" style=" margin-left: 90%;">
-
-            <a href="/logout" class="nav-item nav-link">Logout</a>
+          <div class="navbar-nav" style=" margin-left: 97%;">
+            <a href="/logout" class="nav-item nav-link"><img src="{% static "images/logout.png" %}" alt="John" width="30" height="30"></a>
           </div>
         </div>
       </nav>
