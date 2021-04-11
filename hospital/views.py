@@ -89,7 +89,7 @@ def patient_signup_view(request):
             patient.user=user
             patient.assignedDoctorId=request.POST.get('assignedDoctorId')
             patient.status=True
-            print('blood group'+patient.bloodgroup)
+           
             patient=patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
@@ -698,6 +698,8 @@ def patient_dashboard_view(request):
     'symptoms':patient.symptoms,
     'doctorDepartment':doctor.department,
     'admitDate':patient.admitDate,
+    'bloodgroup':patient.bloodgroup,
+
     }
     return render(request,'hospital/patient_dashboard.html',context=mydict)
 
