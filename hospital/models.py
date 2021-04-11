@@ -39,10 +39,10 @@ class Patient(models.Model):
     admitDate=models.DateField(auto_now=True)
     status=models.BooleanField(default=True)
     #additional changes
-    email=models.EmailField(max_length=256)
+    email=models.EmailField(max_length=256,null=False)
     bloodgroup=models.CharField(max_length=4,null=False)
     age=models.IntegerField(null=False)
-    sex=models.CharField(max_length=10,  choices=GENDER_CHOICES)
+    sex=models.CharField(max_length=10,null=False, choices=GENDER_CHOICES)
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name

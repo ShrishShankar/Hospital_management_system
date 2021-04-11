@@ -89,13 +89,11 @@ def patient_signup_view(request):
             patient.user=user
             patient.assignedDoctorId=request.POST.get('assignedDoctorId')
             patient.status=True
-           
+            print(patient.email)
             patient=patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
-
-        return HttpResponseRedirect('patientlogin')
-        
+        return HttpResponseRedirect('patientlogin')       
     return render(request,'hospital/patientsignup.html',context=mydict)
 
 
@@ -128,6 +126,7 @@ def afterlogin_view(request):
             return redirect('patient-dashboard')
         else:
         return render(request,'hospital/patient_wait_for_approval.html')"""
+
         return redirect('patient-dashboard')
 
 
@@ -572,6 +571,7 @@ def reject_appointment_view(request,pk):
 def doctor_dashboard_view(request):
     #for three cards
     patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
+
     appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
     patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
 
@@ -699,7 +699,9 @@ def patient_dashboard_view(request):
     'doctorDepartment':doctor.department,
     'admitDate':patient.admitDate,
     'bloodgroup':patient.bloodgroup,
-
+    'email':patient.email,
+    'age':patient.age,
+    'sex':patient.sex,
     }
     return render(request,'hospital/patient_dashboard.html',context=mydict)
 
