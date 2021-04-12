@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from django.utils.timezone import timezone
+from django import forms
 
 
 departments = [('Cardiologist', 'Cardiologist'),
@@ -49,19 +50,20 @@ class Doctor(models.Model):
 
 
 class Patient(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(
-        upload_to='profile_pic/PatientProfilePic/', null=True, blank=True)
+    GENDER_CHOICES=[('Male','Male'),('Female','Female'),]
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    profile_pic= models.ImageField(upload_to='profile_pic/PatientProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
-    mobile = models.CharField(max_length=20, null=False)
-    symptoms = models.CharField(max_length=100, null=False)  # might remove
-    bloodgroup = models.CharField(max_length=4, null=False)
-    sex = models.CharField(max_length=1, default='-')
-    assignedDoctorId = models.PositiveIntegerField(null=True)  # might remove
-    status = models.BooleanField(default=True)
-    admitDate = models.DateField(auto_now=True)
-    age = models.PositiveSmallIntegerField(null=False, default=18)
-
+    mobile = models.CharField(max_length=20,null=False)
+    symptoms = models.CharField(max_length=100,null=False)
+    assignedDoctorId = models.PositiveIntegerField(null=True)
+    admitDate=models.DateField(auto_now=True)
+    status=models.BooleanField(default=True)
+    #additional changes
+    email=models.EmailField(max_length=256,null=False)
+    bloodgroup=models.CharField(max_length=4,null=False)
+    age=models.IntegerField(null=False)
+    sex=models.CharField(max_length=10,null=False, choices=GENDER_CHOICES)
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name

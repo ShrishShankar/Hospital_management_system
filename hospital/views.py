@@ -88,18 +88,16 @@ def patient_signup_view(request):
             user = userForm.save()
             user.set_password(user.password)
             user.save()
-            patient = patientForm.save(commit=False)
-            patient.user = user
-            patient.assignedDoctorId = request.POST.get('assignedDoctorId')
-            patient.status = True
-            print('blood group'+patient.bloodgroup)
-            patient = patient.save()
+            patient=patientForm.save(commit=False)
+            patient.user=user
+            patient.assignedDoctorId=request.POST.get('assignedDoctorId')
+            patient.status=True
+            print(patient.email)
+            patient=patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
-
-        return HttpResponseRedirect('patientlogin')
-
-    return render(request, 'hospital/patientsignup.html', context=mydict)
+        return HttpResponseRedirect('patientlogin')       
+    return render(request,'hospital/patientsignup.html',context=mydict)
 
 
 # -----------for checking user is doctor , patient or admin
@@ -132,6 +130,7 @@ def afterlogin_view(request):
             return redirect('patient-dashboard')
         else:
         return render(request,'hospital/patient_wait_for_approval.html')"""
+
         return redirect('patient-dashboard')
 
 
@@ -537,18 +536,15 @@ def reject_appointment_view(request, pk):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
-    # for three cards
-    patientcount = models.Patient.objects.all().filter(
-        status=True, assignedDoctorId=request.user.id).count()
-    appointmentcount = models.Appointment.objects.all().filter(
-        status=True, doctorId=request.user.id).count()
-    patientdischarged = models.PatientDischargeDetails.objects.all(
-    ).distinct().filter(assignedDoctorName=request.user.first_name).count()
+    #for three cards
+    patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
 
-    # for  table in doctor dashboard
-    appointments = models.Appointment.objects.all().filter(
-        status=True, doctorId=request.user.id).order_by('-id')
-    patientid = []
+    appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
+    patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+
+    #for  table in doctor dashboard
+    appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
+    patientid=[]
     for a in appointments:
         patientid.append(a.patientId)
     patients = models.Patient.objects.all().filter(
@@ -664,16 +660,20 @@ def delete_appointment_view(request, pk):
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
 def patient_dashboard_view(request):
-    patient = models.Patient.objects.get(user_id=request.user.id)
-    doctor = models.Doctor.objects.get(user_id=patient.assignedDoctorId)
-    mydict = {
-        'patient': patient,
-        'doctorName': doctor.get_name,
-        'doctorMobile': doctor.mobile,
-        'doctorAddress': doctor.address,
-        'symptoms': patient.symptoms,
-        'doctorDepartment': doctor.department,
-        'admitDate': patient.admitDate,
+    patient=models.Patient.objects.get(user_id=request.user.id)
+    doctor=models.Doctor.objects.get(user_id=patient.assignedDoctorId)
+    mydict={
+    'patient':patient,
+    'doctorName':doctor.get_name,
+    'doctorMobile':doctor.mobile,
+    'doctorAddress':doctor.address,
+    'symptoms':patient.symptoms,
+    'doctorDepartment':doctor.department,
+    'admitDate':patient.admitDate,
+    'bloodgroup':patient.bloodgroup,
+    'email':patient.email,
+    'age':patient.age,
+    'sex':patient.sex,
     }
     return render(request, 'hospital/patient_dashboard.html', context=mydict)
 
@@ -704,6 +704,8 @@ def patient_book_appointment_view(request):
             doctor = models.Doctor.objects.get(
                 user_id=request.POST.get('doctorId'))
 
+            doctor=models.Doctor.objects.get(user_id=request.POST.get('doctorId'))
+            """
             if doctor.department == 'Cardiologist':
                 if 'heart' in desc:
                     pass
@@ -749,18 +751,19 @@ def patient_book_appointment_view(request):
                     pass
                 else:
                     print('else')
-                    message = "Please Choose Doctor According To Disease"
-                    return render(request, 'hospital/patient_book_appointment.html', {'appointmentForm': appointmentForm, 'patient': patient, 'message': message})
+                    message="Please Choose Doctor According To Disease"
+                    return render(request,'hospital/patient_book_appointment.html',{'appointmentForm':appointmentForm,'patient':patient,'message':message})
 
-            appointment = appointmentForm.save(commit=False)
-            appointment.doctorId = request.POST.get('doctorId')
-            # ----user can choose any patient but only their info will be stored
-            appointment.patientId = request.user.id
-            appointment.doctorName = models.User.objects.get(
-                id=request.POST.get('doctorId')).first_name
-            # ----user can choose any patient but only their info will be stored
-            appointment.patientName = request.user.first_name
-            appointment.status = False
+            """
+
+
+
+            appointment=appointmentForm.save(commit=False)
+            appointment.doctorId=request.POST.get('doctorId')
+            appointment.patientId=request.user.id #----user can choose any patient but only their info will be stored
+            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
+            appointment.patientName=request.user.first_name #----user can choose any patient but only their info will be stored
+            appointment.status=False
             appointment.save()
         return HttpResponseRedirect('patient-view-appointment')
     return render(request, 'hospital/patient_book_appointment.html', context=mydict)
