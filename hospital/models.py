@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+from django.utils.timezone import timezone
 
 
 departments = [('Cardiologist', 'Cardiologist'),
@@ -54,11 +55,12 @@ class Patient(models.Model):
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20, null=False)
     symptoms = models.CharField(max_length=100, null=False)  # might remove
-    # patient blood group
     bloodgroup = models.CharField(max_length=4, null=False)
     sex = models.CharField(max_length=1, default='-')
     assignedDoctorId = models.PositiveIntegerField(null=True)  # might remove
     status = models.BooleanField(default=True)
+    admitDate = models.DateField(auto_now=True)
+    age = models.PositiveSmallIntegerField(null=False, default=18)
 
     @property
     def get_name(self):
@@ -75,6 +77,8 @@ class Patient(models.Model):
 class Appointment(models.Model):
     patientId = models.PositiveIntegerField(null=True)
     doctorId = models.PositiveIntegerField(null=True)
+    # patientId = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    # doctorId = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patientName = models.CharField(max_length=40, null=True)
     doctorName = models.CharField(max_length=40, null=True)
     appointmentDate = models.DateField(auto_now=True)
@@ -82,6 +86,9 @@ class Appointment(models.Model):
         null=False, auto_now=True)  # remove auto_now
     description = models.TextField(max_length=500)  # might remove
     status = models.BooleanField(default=False)
+
+    # class Meta:
+    #     unique_together = (("patientID", "doctorId"),)
 
 
 class PatientDischargeDetails(models.Model):
@@ -108,22 +115,33 @@ class PatientDischargeDetails(models.Model):
 
 
 class Medicine(models.Model):
-    med_id = models.PositiveSmallIntegerField(primary_key=True)
-    med_name = models.CharField(max_length=100)
-    cost_for_one = models.PositiveIntegerField(null=False)
-    quantity = models.PositiveIntegerField(null=False)
+    medId = models.PositiveSmallIntegerField(primary_key=True)
+    medName = models.CharField(max_length=100)
+    costForOne = models.PositiveIntegerField(null=False)
+    stock = models.PositiveIntegerField(null=False)
 
 
 # class Takes_meds(models.Model):
+#     purchaseDate=models.DateTimeField(auto_now=True)
+#     patientId=models.ForeignKey(Patient, on_delete=models.CASCADE)
+#     medId=models.ForeignKey(Medicine, on_delete=models.CASCADE)
+#     quantity=models.PositiveIntegerField(null=False)
+
+    # class Meta:
+    #     unique_together = (("patientID", "medId"),)
 
 
 # class Tests(models.Model):
-#     test_id = models.PositiveSmallIntegerField(primary=True)
-#     test_name = models.CharField(max_length=50)
+#     testId = models.PositiveSmallIntegerField(primary=True)
+#     testName = models.CharField(max_length=50)
 #     cost = models.PositiveIntegerField(null=False)
-#     start_time = models.TimeField(null=False)
-#     end_time = models.TimeField(null=False)
-#     test_duration = models.PositiveSmallIntegerField(
+#     startTime = models.TimeField(null=False)
+#     endTime = models.TimeField(null=False)
+#     testDuration = models.PositiveSmallIntegerField(
 #         null=False, default=30)
 
 # class Had_test(models.Model):
+#     testDateTime=models.DateTimeField(null=False, default=timezone.now)
+#     patientId=models.ForeignKey(Patient, on_delete=models.CASCADE)
+#     testId=models.ForeignKey(Patient, on_delete=models.CASCADE)
+
