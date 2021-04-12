@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 
 departments = [('Cardiologist', 'Cardiologist'),
@@ -28,8 +29,10 @@ class Doctor(models.Model):
     fee = models.PositiveIntegerField(null=False, default=100)
     appointment_duration = models.PositiveSmallIntegerField(
         null=False, default=30)
-    start_time = models.TimeField(null=False)
-    end_time = models.TimeField(null=False)
+    start_time = models.TimeField(
+        null=False, default=datetime.time(9, 00))  # remove auto_now
+    end_time = models.TimeField(
+        null=False, default=datetime.time(17, 00))  # remove auto_now
     status = models.BooleanField(default=False)
 
     @property
@@ -53,7 +56,7 @@ class Patient(models.Model):
     symptoms = models.CharField(max_length=100, null=False)  # might remove
     # patient blood group
     bloodgroup = models.CharField(max_length=4, null=False)
-    sex = models.CharField(max_lenght=1)
+    sex = models.CharField(max_length=1, default='-')
     assignedDoctorId = models.PositiveIntegerField(null=True)  # might remove
     status = models.BooleanField(default=True)
 
@@ -75,7 +78,8 @@ class Appointment(models.Model):
     patientName = models.CharField(max_length=40, null=True)
     doctorName = models.CharField(max_length=40, null=True)
     appointmentDate = models.DateField(auto_now=True)
-    appointmentTime = models.TimeField(null=False)
+    appointmentTime = models.TimeField(
+        null=False, auto_now=True)  # remove auto_now
     description = models.TextField(max_length=500)  # might remove
     status = models.BooleanField(default=False)
 
@@ -107,7 +111,7 @@ class Medicine(models.Model):
     med_id = models.PositiveSmallIntegerField(primary_key=True)
     med_name = models.CharField(max_length=100)
     cost_for_one = models.PositiveIntegerField(null=False)
-    quantity-models.PositiveIntegerField(null=False)
+    quantity = models.PositiveIntegerField(null=False)
 
 
 # class Takes_meds(models.Model):
