@@ -10,8 +10,11 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required, user_passes_test
-from datetime import datetime, timedelta, date
+from datetime import timedelta, date
+import datetime
 from django.conf import settings
+from django.db import connection
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -43,16 +46,73 @@ def patientclick_view(request):
     return render(request, 'hospital/patientclick.html')
 
 
+def fetchNextId(table_name):
+    cursor = connection.cursor()
+    cursor.execute("SELECT id FROM {} ORDER BY id DESC LIMIT 1;".format(table_name))
+    user_last_id = cursor.fetchall()
+    if user_last_id is ():
+        user_last_id=0
+    else:
+        ((user_last_id,),)=user_last_id
+    
+    return user_last_id+1
+
+
+def authUserReg(form, user_type):
+    auth_user_attributes = ['id', 'password', 'last_login', 'is_superuser', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active' , 'date_joined']
+    form_data = form.cleaned_data
+
+    user_next_id = fetchNextId('auth_user')
+    form_data['id'] = user_next_id
+    form_data['password'] = make_password(form_data['password'])
+    form_data['last_login'] = 'NULL'
+    form_data['is_superuser'] = 0
+    form_data['email'] = ''
+    form_data['is_staff'] = 0
+    form_data['is_active'] = 1
+    form_data['date_joined'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    
+    sql=''
+    for key in auth_user_attributes:
+        if isinstance(form_data[key], str) and form_data[key] is not 'NULL':
+            form_data[key]="'{}'".format(form_data[key])
+        if key is not 'date_joined':
+            sql += str(form_data[key]) + ", "
+        else:
+            sql += str(form_data[key])
+
+    cursor = connection.cursor()
+    sql = "INSERT INTO auth_user VALUES (" + sql + ");"
+    cursor.execute(sql)
+
+    cursor.execute("SELECT count(*) FROM auth_group WHERE name='{}';".format(user_type))
+    group_exist=cursor.fetchone()
+    (group_exist,)=group_exist
+    if group_exist==0:
+        auth_group_next_id = fetchNextId('auth_group')
+    else:
+        cursor.execute("SELECT id FROM auth_group WHERE name='{}';".format(user_type))
+        (auth_group_next_id,)=cursor.fetchone()
+    
+    cursor.execute("INSERT INTO auth_group VALUES ({}, '{}') ON DUPLICATE KEY UPDATE id=id;".format(auth_group_next_id, user_type))
+    
+    auth_user_groups_next_id=fetchNextId('auth_user_groups')
+    cursor.execute("INSERT INTO auth_user_groups VALUES ({}, {}, {});".format(auth_user_groups_next_id, user_next_id, auth_group_next_id))
+
+
 def admin_signup_view(request):
     form = forms.AdminSigupForm()
     if request.method == 'POST':
         form = forms.AdminSigupForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.set_password(user.password)
-            user.save()
-            my_admin_group = Group.objects.get_or_create(name='ADMIN')
-            my_admin_group[0].user_set.add(user)
+            # user = form.save()
+            # user.set_password(user.password)
+            # user.save()
+            # my_admin_group = Group.objects.get_or_create(name='ADMIN')
+            # my_admin_group[0].user_set.add(user)
+            authUserReg(form, 'ADMIN')
+            
             return HttpResponseRedirect('adminlogin')
     return render(request, 'hospital/adminsignup.html', {'form': form})
 
@@ -68,11 +128,35 @@ def doctor_signup_view(request):
             user = userForm.save()
             user.set_password(user.password)
             user.save()
+            my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
+            my_doctor_group[0].user_set.add(user)
+
+            # CHANGE PROFILE PIC TO GENERIC PIC !!!!!!!
+            # authUserReg(userForm, 'DOCTOR')
+            # doc_attributes = ['id', 'profile_pic', 'address', 'mobile', 'department', 'fee', 'appointment_duration', 'start_time', 'end_time', 'status' , 'user_id']
+            # doc_data=doctorForm.cleaned_data
+            # doc_data['id'] = fetchNextId('hospital_doctor')
+            # doc_data['appointment_duration'] = 30
+            # doc_data['start_time'] = '09:00:00'
+            # doc_data['end_time'] = '17:00:00'
+            # doc_data['user_id'] = fetchNextId('auth_user') - 1
+            
+            # sql=''
+            # for key in doc_attributes:
+            #     if isinstance(doc_data[key], str):
+            #         doc_data[key]="'{}'".format(doc_data[key])
+            #     if key is not 'user_id':
+            #         sql += str(doc_data[key]) + ", "
+            #     else:
+            #         sql += str(doc_data[key])
+
+            # cursor = connection.cursor()
+            # sql = "INSERT INTO auth_user VALUES (" + sql + ");"
+            # cursor.execute(sql)
+            
             doctor = doctorForm.save(commit=False)
             doctor.user = user
             doctor = doctor.save()
-            my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
-            my_doctor_group[0].user_set.add(user)
         return HttpResponseRedirect('doctorlogin')
     return render(request, 'hospital/doctorsignup.html', context=mydict)
 
@@ -88,16 +172,39 @@ def patient_signup_view(request):
             user = userForm.save()
             user.set_password(user.password)
             user.save()
+            my_patient_group = Group.objects.get_or_create(name='PATIENT')
+            my_patient_group[0].user_set.add(user)
+
+            # CHANGE PROFILE PIC TO GENERIC PIC !!!!!!!!!
+            # authUserReg(userForm, 'PATIENT')
+            # pat_attributes = ['id', 'profile_pic', 'address', 'mobile', 'symptoms', 'assignedDoctorId', 'admitDate', 'status', 'email', 'bloodgroup', 'age', 'sex', 'user_id']
+            # pat_data=patientForm.cleaned_data
+            # pat_data['id'] = fetchNextId('hospital_patient')
+            # pat_data['admitDate'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # pat_data['status'] = 1
+            # pat_data['email'] = ''
+            # pat_data['user_id'] = fetchNextId('auth_user') - 1
+            
+            # sql=''
+            # for key in pat_attributes:
+            #     if isinstance(pat_data[key], str):
+            #         pat_data[key]="'{}'".format(pat_data[key])
+            #     if key is not 'user_id':
+            #         sql += str(pat_data[key]) + ", "
+            #     else:
+            #         sql += str(pat_data[key])
+
+            # cursor = connection.cursor()
+            # sql = "INSERT INTO auth_user VALUES (" + sql + ");"
+            # cursor.execute(sql)
+
             patient=patientForm.save(commit=False)
             patient.user=user
             patient.assignedDoctorId=request.POST.get('assignedDoctorId')
             patient.status=True
-            print(patient.email)
-            patient=patient.save()
-            my_patient_group = Group.objects.get_or_create(name='PATIENT')
-            my_patient_group[0].user_set.add(user)
-        return HttpResponseRedirect('patientlogin')       
-    return render(request,'hospital/patientsignup.html',context=mydict)
+            patient = patient.save()
+        return HttpResponseRedirect('patientlogin')
+    return render(request, 'hospital/patientsignup.html', context=mydict)
 
 
 # -----------for checking user is doctor , patient or admin
@@ -536,15 +643,19 @@ def reject_appointment_view(request, pk):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
-    #for three cards
-    patientcount=models.Patient.objects.all().filter(status=True,assignedDoctorId=request.user.id).count()
+    # for three cards
+    patientcount = models.Patient.objects.all().filter(
+        status=True, assignedDoctorId=request.user.id).count()
 
-    appointmentcount=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).count()
-    patientdischarged=models.PatientDischargeDetails.objects.all().distinct().filter(assignedDoctorName=request.user.first_name).count()
+    appointmentcount = models.Appointment.objects.all().filter(
+        status=True, doctorId=request.user.id).count()
+    patientdischarged = models.PatientDischargeDetails.objects.all(
+    ).distinct().filter(assignedDoctorName=request.user.first_name).count()
 
-    #for  table in doctor dashboard
-    appointments=models.Appointment.objects.all().filter(status=True,doctorId=request.user.id).order_by('-id')
-    patientid=[]
+    # for  table in doctor dashboard
+    appointments = models.Appointment.objects.all().filter(
+        status=True, doctorId=request.user.id).order_by('-id')
+    patientid = []
     for a in appointments:
         patientid.append(a.patientId)
     patients = models.Patient.objects.all().filter(
@@ -660,20 +771,20 @@ def delete_appointment_view(request, pk):
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
 def patient_dashboard_view(request):
-    patient=models.Patient.objects.get(user_id=request.user.id)
-    doctor=models.Doctor.objects.get(user_id=patient.assignedDoctorId)
-    mydict={
-    'patient':patient,
-    'doctorName':doctor.get_name,
-    'doctorMobile':doctor.mobile,
-    'doctorAddress':doctor.address,
-    'symptoms':patient.symptoms,
-    'doctorDepartment':doctor.department,
-    'admitDate':patient.admitDate,
-    'bloodgroup':patient.bloodgroup,
-    'email':patient.email,
-    'age':patient.age,
-    'sex':patient.sex,
+    patient = models.Patient.objects.get(user_id=request.user.id)
+    doctor = models.Doctor.objects.get(user_id=patient.assignedDoctorId)
+    mydict = {
+        'patient': patient,
+        'doctorName': doctor.get_name,
+        'doctorMobile': doctor.mobile,
+        'doctorAddress': doctor.address,
+        'symptoms': patient.symptoms,
+        'doctorDepartment': doctor.department,
+        'admitDate': patient.admitDate,
+        'bloodgroup': patient.bloodgroup,
+        'email': patient.email,
+        'age': patient.age,
+        'sex': patient.sex,
     }
     return render(request, 'hospital/patient_dashboard.html', context=mydict)
 
@@ -704,7 +815,8 @@ def patient_book_appointment_view(request):
             doctor = models.Doctor.objects.get(
                 user_id=request.POST.get('doctorId'))
 
-            doctor=models.Doctor.objects.get(user_id=request.POST.get('doctorId'))
+            doctor = models.Doctor.objects.get(
+                user_id=request.POST.get('doctorId'))
             """
             if doctor.department == 'Cardiologist':
                 if 'heart' in desc:
@@ -756,14 +868,15 @@ def patient_book_appointment_view(request):
 
             """
 
-
-
-            appointment=appointmentForm.save(commit=False)
-            appointment.doctorId=request.POST.get('doctorId')
-            appointment.patientId=request.user.id #----user can choose any patient but only their info will be stored
-            appointment.doctorName=models.User.objects.get(id=request.POST.get('doctorId')).first_name
-            appointment.patientName=request.user.first_name #----user can choose any patient but only their info will be stored
-            appointment.status=False
+            appointment = appointmentForm.save(commit=False)
+            appointment.doctorId = request.POST.get('doctorId')
+            # ----user can choose any patient but only their info will be stored
+            appointment.patientId = request.user.id
+            appointment.doctorName = models.User.objects.get(
+                id=request.POST.get('doctorId')).first_name
+            # ----user can choose any patient but only their info will be stored
+            appointment.patientName = request.user.first_name
+            appointment.status = False
             appointment.save()
         return HttpResponseRedirect('patient-view-appointment')
     return render(request, 'hospital/patient_book_appointment.html', context=mydict)
