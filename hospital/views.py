@@ -169,44 +169,38 @@ def patient_signup_view(request):
         userForm = forms.PatientUserForm(request.POST)
         patientForm = forms.PatientForm(request.POST, request.FILES)
         if userForm.is_valid() and patientForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
-            user.save()
-            my_patient_group = Group.objects.get_or_create(name='PATIENT')
-            my_patient_group[0].user_set.add(user)
+            # user = userForm.save()
+            # user.set_password(user.password)
+            # user.save()
+            # my_patient_group = Group.objects.get_or_create(name='PATIENT')
+            # my_patient_group[0].user_set.add(user)
 
-            # CHANGE PROFILE PIC TO GENERIC PIC !!!!!!!!!
-            # authUserReg(userForm, 'PATIENT')
-            # pat_attributes = ['id', 'address', 'mobile', 'symptoms', 'assignedDoctorId', 'admitDate', 'status', 'email', 'bloodgroup', 'age', 'sex', 'user_id']
-            # pat_data=patientForm.cleaned_data
-            # pat_data['id'] = fetchNextId('hospital_patient')
-            # pat_data['admitDate'] = datetime.datetime.now().strftime("%Y-%m-%d")
-            # pat_data['status'] = 1
-            # pat_data['email'] = ''
-            # pat_data['user_id'] = fetchNextId('auth_user') - 1
-            # print(pat_data['assignedDoctorId'])
-            # # pat_data['assignedDoctorId']
+            authUserReg(userForm, 'PATIENT')
+            pat_attributes = ['id', 'address', 'mobile', 'symptoms', 'assignedDoctorId', 'admitDate', 'status', 'email', 'bloodgroup', 'age', 'sex', 'user_id']
+            pat_data=patientForm.cleaned_data
+            pat_data['id'] = fetchNextId('hospital_patient')
+            pat_data['admitDate'] = datetime.datetime.now().strftime("%Y-%m-%d")
+            pat_data['status'] = 1
+            pat_data['user_id'] = fetchNextId('auth_user') - 1
+            pat_data['assignedDoctorId'] = getattr(pat_data['assignedDoctorId'], 'user_id') # might change if form is changed
             
-            # print(pat_data)
-            # sql=''
-            # for key in pat_attributes:
-            #     if isinstance(pat_data[key], str):
-            #         pat_data[key]="'{}'".format(pat_data[key])
-            #     if key is not 'user_id':
-            #         sql += str(pat_data[key]) + ", "
-            #     else:
-            #         sql += str(pat_data[key])
+            sql=''
+            for key in pat_attributes:
+                if isinstance(pat_data[key], str):
+                    pat_data[key]="'{}'".format(pat_data[key])
+                if key is not 'user_id':
+                    sql += str(pat_data[key]) + ", "
+                else:
+                    sql += str(pat_data[key])
+            cursor = connection.cursor()
+            sql = "INSERT INTO hospital_patient VALUES (" + sql + ");"
+            cursor.execute(sql)
 
-            # print(sql)
-            # cursor = connection.cursor()
-            # sql = "INSERT INTO hospital_patient VALUES (" + sql + ");"
-            # cursor.execute(sql)
-
-            patient=patientForm.save(commit=False)
-            patient.user=user
-            patient.assignedDoctorId=request.POST.get('assignedDoctorId')
-            patient.status=True
-            patient = patient.save()
+            # patient=patientForm.save(commit=False)
+            # patient.user=user
+            # patient.assignedDoctorId=request.POST.get('assignedDoctorId')
+            # patient.status=True
+            # patient = patient.save()
         return HttpResponseRedirect('patientlogin')
     return render(request, 'hospital/patientsignup.html', context=mydict)
 
