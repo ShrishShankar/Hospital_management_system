@@ -87,6 +87,21 @@ class Appointment(models.Model):
     #     unique_together = (("patientID", "doctorId"),)
 
 
+class Facilities(models.Model):
+    FACILITIES=[('Bloodtest','Bloodtest'),('X-ray','X-ray')]
+    patientId = models.PositiveIntegerField(null=True)
+    doctorId = models.PositiveIntegerField(null=True)
+    patientName = models.CharField(max_length=40, null=True)
+    doctorName = models.CharField(max_length=40, null=True)
+
+    appointmentDate = models.DateField(auto_now=True)
+    appointmentTime = models.TimeField(
+        null=False, auto_now=True)
+    
+    service=models.CharField(max_length=20,null=False, choices=FACILITIES)
+    status = models.BooleanField(default=False)
+
+
 class PatientDischargeDetails(models.Model):
     patientId = models.PositiveIntegerField(null=True)
     patientName = models.CharField(max_length=40)
@@ -125,19 +140,4 @@ class Medicine(models.Model):
 
     # class Meta:
     #     unique_together = (("patientID", "medId"),)
-
-
-# class Tests(models.Model):
-#     testId = models.PositiveSmallIntegerField(primary=True)
-#     testName = models.CharField(max_length=50)
-#     cost = models.PositiveIntegerField(null=False)
-#     startTime = models.TimeField(null=False)
-#     endTime = models.TimeField(null=False)
-#     testDuration = models.PositiveSmallIntegerField(
-#         null=False, default=30)
-
-# class Had_test(models.Model):
-#     testDateTime=models.DateTimeField(null=False, default=timezone.now)
-#     patientId=models.ForeignKey(Patient, on_delete=models.CASCADE)
-#     testId=models.ForeignKey(Patient, on_delete=models.CASCADE)
 
