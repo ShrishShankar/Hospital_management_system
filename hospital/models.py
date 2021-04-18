@@ -22,19 +22,14 @@ departments = [('Cardiologist', 'Cardiologist'),
 
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(
-        upload_to='profile_pic/DoctorProfilePic/', null=True, blank=True)
+    # profile_pic = models.ImageField(upload_to='profile_pic/DoctorProfilePic/', null=True, blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20, null=True)
-    department = models.CharField(
-        max_length=50, choices=departments, default='Cardiologist')
+    department = models.CharField(max_length=50, choices=departments, default='Cardiologist')
     fee = models.PositiveIntegerField(null=False, default=100)
-    appointment_duration = models.PositiveSmallIntegerField(
-        null=False, default=30)
-    start_time = models.TimeField(
-        null=False, default=datetime.time(9, 00))  # remove auto_now
-    end_time = models.TimeField(
-        null=False, default=datetime.time(17, 00))  # remove auto_now
+    appointment_duration = models.PositiveSmallIntegerField(null=False, default=30)
+    start_time = models.TimeField(null=False, default=datetime.time(9, 00))
+    end_time = models.TimeField(null=False, default=datetime.time(17, 00))
     status = models.BooleanField(default=False)
 
     @property
@@ -52,7 +47,6 @@ class Doctor(models.Model):
 class Patient(models.Model):
     GENDER_CHOICES=[('Male','Male'),('Female','Female'),]
     user=models.OneToOneField(User,on_delete=models.CASCADE)
-    profile_pic= models.ImageField(upload_to='profile_pic/PatientProfilePic/',null=True,blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20,null=False)
     symptoms = models.CharField(max_length=100,null=False)

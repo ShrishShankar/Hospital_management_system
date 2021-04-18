@@ -125,38 +125,38 @@ def doctor_signup_view(request):
         userForm = forms.DoctorUserForm(request.POST)
         doctorForm = forms.DoctorForm(request.POST, request.FILES)
         if userForm.is_valid() and doctorForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
-            user.save()
-            my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
-            my_doctor_group[0].user_set.add(user)
+            # user = userForm.save()
+            # user.set_password(user.password)
+            # user.save()
+            # my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
+            # my_doctor_group[0].user_set.add(user)
 
-            # CHANGE PROFILE PIC TO GENERIC PIC !!!!!!!
-            # authUserReg(userForm, 'DOCTOR')
-            # doc_attributes = ['id', 'profile_pic', 'address', 'mobile', 'department', 'fee', 'appointment_duration', 'start_time', 'end_time', 'status' , 'user_id']
-            # doc_data=doctorForm.cleaned_data
-            # doc_data['id'] = fetchNextId('hospital_doctor')
-            # doc_data['appointment_duration'] = 30
-            # doc_data['start_time'] = '09:00:00'
-            # doc_data['end_time'] = '17:00:00'
-            # doc_data['user_id'] = fetchNextId('auth_user') - 1
+            authUserReg(userForm, 'DOCTOR')
+            doc_attributes = ['id', 'address', 'mobile', 'department', 'fee', 'status', 'user_id', 'appointment_duration', 'end_time', 'start_time']
+            doc_data=doctorForm.cleaned_data
+            doc_data['id'] = fetchNextId('hospital_doctor')
+            doc_data['appointment_duration'] = 30
+            doc_data['start_time'] = '09:00:00'
+            doc_data['end_time'] = '17:00:00'
+            doc_data['user_id'] = fetchNextId('auth_user') - 1
+            doc_data['fee'] = 100
             
-            # sql=''
-            # for key in doc_attributes:
-            #     if isinstance(doc_data[key], str):
-            #         doc_data[key]="'{}'".format(doc_data[key])
-            #     if key is not 'user_id':
-            #         sql += str(doc_data[key]) + ", "
-            #     else:
-            #         sql += str(doc_data[key])
+            sql=''
+            for key in doc_attributes:
+                if isinstance(doc_data[key], str):
+                    doc_data[key]="'{}'".format(doc_data[key])
+                if key is not 'start_time':
+                    sql += str(doc_data[key]) + ", "
+                else:
+                    sql += str(doc_data[key])
 
-            # cursor = connection.cursor()
-            # sql = "INSERT INTO auth_user VALUES (" + sql + ");"
-            # cursor.execute(sql)
+            cursor = connection.cursor()
+            sql = "INSERT INTO hospital_doctor VALUES (" + sql + ");"
+            cursor.execute(sql)
             
-            doctor = doctorForm.save(commit=False)
-            doctor.user = user
-            doctor = doctor.save()
+            # doctor = doctorForm.save(commit=False)
+            # doctor.user = user
+            # doctor = doctor.save()
         return HttpResponseRedirect('doctorlogin')
     return render(request, 'hospital/doctorsignup.html', context=mydict)
 
@@ -177,14 +177,17 @@ def patient_signup_view(request):
 
             # CHANGE PROFILE PIC TO GENERIC PIC !!!!!!!!!
             # authUserReg(userForm, 'PATIENT')
-            # pat_attributes = ['id', 'profile_pic', 'address', 'mobile', 'symptoms', 'assignedDoctorId', 'admitDate', 'status', 'email', 'bloodgroup', 'age', 'sex', 'user_id']
+            # pat_attributes = ['id', 'address', 'mobile', 'symptoms', 'assignedDoctorId', 'admitDate', 'status', 'email', 'bloodgroup', 'age', 'sex', 'user_id']
             # pat_data=patientForm.cleaned_data
             # pat_data['id'] = fetchNextId('hospital_patient')
-            # pat_data['admitDate'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # pat_data['admitDate'] = datetime.datetime.now().strftime("%Y-%m-%d")
             # pat_data['status'] = 1
             # pat_data['email'] = ''
             # pat_data['user_id'] = fetchNextId('auth_user') - 1
+            # print(pat_data['assignedDoctorId'])
+            # # pat_data['assignedDoctorId']
             
+            # print(pat_data)
             # sql=''
             # for key in pat_attributes:
             #     if isinstance(pat_data[key], str):
@@ -194,8 +197,9 @@ def patient_signup_view(request):
             #     else:
             #         sql += str(pat_data[key])
 
+            # print(sql)
             # cursor = connection.cursor()
-            # sql = "INSERT INTO auth_user VALUES (" + sql + ");"
+            # sql = "INSERT INTO hospital_patient VALUES (" + sql + ");"
             # cursor.execute(sql)
 
             patient=patientForm.save(commit=False)
