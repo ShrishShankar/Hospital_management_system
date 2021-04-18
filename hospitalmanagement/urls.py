@@ -1,12 +1,3 @@
-"""
-
-Developed By : sumit kumar
-facebook : fb.com/sumit.luv
-Youtube :youtube.com/lazycoders
-
-
-"""
-
 
 
 
@@ -21,9 +12,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home_view,name=''),
 
-
-    path('aboutus', views.aboutus_view),
-    path('contactus', views.contactus_view),
 
 
     path('adminclick', views.adminclick_view),
@@ -49,7 +37,6 @@ urlpatterns = [
     path('admin-view-doctor', views.admin_view_doctor_view,name='admin-view-doctor'),
     path('delete-doctor-from-hospital/<int:pk>', views.delete_doctor_from_hospital_view,name='delete-doctor-from-hospital'),
     path('update-doctor/<int:pk>', views.update_doctor_view,name='update-doctor'),
-    path('admin-add-doctor', views.admin_add_doctor_view,name='admin-add-doctor'),
     path('admin-approve-doctor', views.admin_approve_doctor_view,name='admin-approve-doctor'),
     path('approve-doctor/<int:pk>', views.approve_doctor_view,name='approve-doctor'),
     path('reject-doctor/<int:pk>', views.reject_doctor_view,name='reject-doctor'),
@@ -60,10 +47,6 @@ urlpatterns = [
     path('admin-view-patient', views.admin_view_patient_view,name='admin-view-patient'),
     path('delete-patient-from-hospital/<int:pk>', views.delete_patient_from_hospital_view,name='delete-patient-from-hospital'),
     path('update-patient/<int:pk>', views.update_patient_view,name='update-patient'),
-    path('admin-add-patient', views.admin_add_patient_view,name='admin-add-patient'),
-    path('admin-approve-patient', views.admin_approve_patient_view,name='admin-approve-patient'),
-    path('approve-patient/<int:pk>', views.approve_patient_view,name='approve-patient'),
-    path('reject-patient/<int:pk>', views.reject_patient_view,name='reject-patient'),
     path('admin-discharge-patient', views.admin_discharge_patient_view,name='admin-discharge-patient'),
     path('discharge-patient/<int:pk>', views.discharge_patient_view,name='discharge-patient'),
     path('download-pdf/<int:pk>', views.download_pdf_view,name='download-pdf'),
@@ -71,10 +54,14 @@ urlpatterns = [
 
     path('admin-appointment', views.admin_appointment_view,name='admin-appointment'),
     path('admin-view-appointment', views.admin_view_appointment_view,name='admin-view-appointment'),
-    path('admin-add-appointment', views.admin_add_appointment_view,name='admin-add-appointment'),
     path('admin-approve-appointment', views.admin_approve_appointment_view,name='admin-approve-appointment'),
     path('approve-appointment/<int:pk>', views.approve_appointment_view,name='approve-appointment'),
     path('reject-appointment/<int:pk>', views.reject_appointment_view,name='reject-appointment'),
+
+    path('admin-view-facilities', views.admin_view_facilities_view,name='admin-view-facilities'),
+    path('admin-approve-facilities', views.admin_approve_facilities_view,name='admin-approve-facilities'),
+    path('approve-facilities/<int:pk>', views.approve_facilities_view,name='approve-facilities'),
+    path('reject-facilities/<int:pk>', views.reject_facilities_view,name='reject-facilities'),
 ]
 
 
@@ -84,7 +71,7 @@ urlpatterns +=[
 
     path('doctor-patient', views.doctor_patient_view,name='doctor-patient'),
     path('doctor-view-patient', views.doctor_view_patient_view,name='doctor-view-patient'),
-    path('doctor-view-discharge-patient',views.doctor_view_discharge_patient_view,name='doctor-view-discharge-patient'),
+    
 
     path('doctor-appointment', views.doctor_appointment_view,name='doctor-appointment'),
     path('doctor-view-appointment', views.doctor_view_appointment_view,name='doctor-view-appointment'),
@@ -101,11 +88,10 @@ urlpatterns +=[
     path('patient-dashboard', views.patient_dashboard_view,name='patient-dashboard'),
     path('patient-appointment', views.patient_appointment_view,name='patient-appointment'),
     path('patient-book-appointment', views.patient_book_appointment_view,name='patient-book-appointment'),
+    path('patient-book-facilities', views.patient_book_facilities_view,name='patient-book-facilities'),
     path('patient-view-appointment', views.patient_view_appointment_view,name='patient-view-appointment'),
+    path('patient-view-facilities', views.patient_view_facilities_view,name='patient-view-facilities'),
     path('patient-discharge', views.patient_discharge_view,name='patient-discharge'),
 
 ]
 
-#Developed By : sumit kumar
-#facebook : fb.com/sumit.luv
-#Youtube :youtube.com/lazycoders
