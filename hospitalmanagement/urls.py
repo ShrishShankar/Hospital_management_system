@@ -1,6 +1,3 @@
-
-
-
 from django.contrib import admin
 from django.urls import path
 from hospital import views
@@ -91,6 +88,7 @@ urlpatterns +=[
     path('patient-book-facilities', views.patient_book_facilities_view,name='patient-book-facilities'),
     path('patient-view-appointment', views.patient_view_appointment_view,name='patient-view-appointment'),
     path('patient-view-facilities', views.patient_view_facilities_view,name='patient-view-facilities'),
+    path('patient-buy-medicine', views.patient_buy_medicine,name='patient-buy-medicine'),
     path('patient-discharge', views.patient_discharge_view,name='patient-discharge'),
 
 ]

@@ -794,6 +794,28 @@ def patient_book_facilities_view(request):
         return HttpResponseRedirect('patient-view-facilities')
     return render(request, 'hospital/patient_book_facilities.html', context=mydict)
 
+
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def patient_buy_medicine(request):
+    medicineForm=forms.MedicineForm()
+    patient = models.Patient.objects.get(user_id=request.user.id)
+    message = None
+    mydict = {'medicineForm': medicineForm,
+              'patient': patient, 'message': message}
+    if request.method == 'POST':
+        medicineForm=forms.MedicineForm(request.POST)
+        if medicineForm.is_valid():
+            medicine=medicineForm.save(commit=False)
+            medicine.patientId=request.user.id
+            medicine.quantity=request.POST.get('quantity')
+            medicine.drug=request.POST.get('drug')
+
+            medicine.save()
+        return HttpResponseRedirect('patient-buy-medicine')
+    return render(request, 'hospital/patient_buy_medicine.html', context=mydict)
+
+
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
 def patient_view_appointment_view(request):
