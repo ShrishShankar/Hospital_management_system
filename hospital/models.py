@@ -127,12 +127,10 @@ class PatientDischargeDetails(models.Model):
 
 class Medicine(models.Model):
     MEDICINES = [('PARACETAMOL','PARACETAMOL'),('TYLENOL','TYLENOL')]
-    # medId = models.PositiveSmallIntegerField(primary_key=True)
-    # medName = models.CharField(max_length=100)
     patientId = models.PositiveIntegerField(null=True)
     costForOne = models.PositiveIntegerField(null=False, default=50)
     quantity = models.PositiveIntegerField(null=False)
-    drug=models.CharField(max_length=20,null=False, choices=MEDICINES)
+    drug = models.CharField(max_length=100,null=True, choices=MEDICINES)
 
 
 # class Takes_meds(models.Model):

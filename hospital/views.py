@@ -139,7 +139,7 @@ def doctor_signup_view(request):
             # my_doctor_group[0].user_set.add(user)
 
             authUserReg(userForm, 'DOCTOR')
-            doc_attributes = ['id', 'address', 'mobile', 'department', 'fee', 'status', 'user_id', 'appointment_duration', 'end_time', 'start_time']
+            doc_attributes = ['id', 'address', 'mobile', 'department', 'fee', 'appointment_duration', 'start_time', 'end_time', 'status', 'user_id']
             doc_data=doctorForm.cleaned_data
             doc_data['id'] = fetchNextId('hospital_doctor')
             doc_data['appointment_duration'] = 30
@@ -147,16 +147,17 @@ def doctor_signup_view(request):
             doc_data['end_time'] = '17:00:00'
             doc_data['user_id'] = fetchNextId('auth_user') - 1
             doc_data['fee'] = 100
+            doc_data['status'] = 0
             
             sql=''
             for key in doc_attributes:
                 if isinstance(doc_data[key], str):
                     doc_data[key]="'{}'".format(doc_data[key])
-                if key is not 'start_time':
+                if key is not 'user_id':
                     sql += str(doc_data[key]) + ", "
                 else:
                     sql += str(doc_data[key])
-
+            print(sql)
             cursor = connection.cursor()
             sql = "INSERT INTO hospital_doctor VALUES (" + sql + ");"
             cursor.execute(sql)
@@ -781,7 +782,7 @@ def patient_book_facilities_view(request):
     if request.method == 'POST':
         facilitiesForm=forms.PatientFacilitiesForm(request.POST)
         if facilitiesForm.is_valid():
-            doctor = models.Doctor.objects.get( user_id=request.POST.get('doctorId'))
+            doctor = models.Doctor.objects.get(user_id=request.POST.get('doctorId'))
             facilities=facilitiesForm.save(commit=False)
             facilities.doctorId=request.POST.get('doctorId')
             facilities.patientId=request.user.id #----user can choose any patient but only their info will be stored
@@ -795,25 +796,86 @@ def patient_book_facilities_view(request):
     return render(request, 'hospital/patient_book_facilities.html', context=mydict)
 
 
-@login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
-def patient_buy_medicine(request):
-    medicineForm=forms.MedicineForm()
-    patient = models.Patient.objects.get(user_id=request.user.id)
-    message = None
-    mydict = {'medicineForm': medicineForm,
-              'patient': patient, 'message': message}
-    if request.method == 'POST':
-        medicineForm=forms.MedicineForm(request.POST)
-        if medicineForm.is_valid():
-            medicine=medicineForm.save(commit=False)
-            medicine.patientId=request.user.id
-            medicine.quantity=request.POST.get('quantity')
-            medicine.drug=request.POST.get('drug')
+# @login_required(login_url='patientlogin')
+# @user_passes_test(is_patient)
+# def patient_buy_medicine(request):
+#     medicineForm=forms.MedicineForm()
+#     patient = models.Patient.objects.get(user_id=request.user.id)
+#     message = None
+#     mydict = {'medicineForm': medicineForm,
+#               'patient': patient, 'message': message}
+#     if request.method == 'POST':
+#         medicineForm=forms.MedicineForm(request.POST)
+#         print(medicineForm.is_valid())
+#         if medicineForm.is_valid():
+#             medicine=medicineForm.save(commit=False)
+#             medicine.patientId=request.user.id
+#             medicine.quantity=request.POST.get('quantity')
+#             medicine.drug=request.POST.get('drug')
 
-            medicine.save()
-        return HttpResponseRedirect('patient-buy-medicine')
-    return render(request, 'hospital/patient_buy_medicine.html', context=mydict)
+#             medicine.save()
+#         return HttpResponseRedirect('patient-medicine-bill')
+#     return render(request, 'hospital/patient_buy_medicine.html', context=mydict)
+
+
+# @login_required(login_url='patientlogin')
+# @user_passes_test(is_patient)
+# def patient_medicine_bill(request):
+#     patient = models.Patient.objects.get(user_id=request.user.id)
+#     assignedDoctor = models.User.objects.all().filter(id=patient.assignedDoctorId)
+
+#     cursor = connection.cursor()
+#     cursor.execute("SELECT medId FROM hospital_medicine ORDER BY medId DESC LIMIT 1;")
+#     user_last_id = cursor.fetchall()
+#     if user_last_id is ():
+#         user_last_id=0
+#     else:
+#         ((user_last_id,),)=user_last_id
+    
+#     med_id = user_last_id
+    
+#     med = models.Medicine.objects.get(medId = med_id)
+#     print("error at medicine")
+#     patientDict = {
+#         'patientId': patient.id,
+#         'name': patient.get_name,
+#         'mobile': patient.mobile,
+#         'address': patient.address,
+#         'symptoms': patient.symptoms,
+#         'todayDate': date.today(),
+#         'assignedDoctorName': assignedDoctor[0].first_name,
+#     }
+#     feeDict = {
+#         'medId': med.medId,
+#         'medicineName': med.medName,
+#         'quantity': med.quantity,
+#         'costPerMedicine': med.costForOne,
+#         'Tax': 0.05,
+#         'total': (med.costForOne*med.quantity*1.05)
+#         }
+#     patientDict.update(feeDict)
+#     return render(request, 'hospital/patient_medicine_bill.html', context=patientDict)
+
+
+# def download_med_pdf_view(request, medId):
+#     med = models.Medicine.objects.get(medId = med_id)
+#     patient = models.Patient.objects.get(user_id=request.user.id)
+#     dict = {
+#         'patientName': dischargeDetails[0].patientName,
+#         'assignedDoctorName': dischargeDetails[0].assignedDoctorName,
+#         'address': dischargeDetails[0].address,
+#         'mobile': dischargeDetails[0].mobile,
+#         'symptoms': dischargeDetails[0].symptoms,
+#         'admitDate': dischargeDetails[0].admitDate,
+#         'releaseDate': dischargeDetails[0].releaseDate,
+#         'daySpent': dischargeDetails[0].daySpent,
+#         'medicineCost': dischargeDetails[0].medicineCost,
+#         'roomCharge': dischargeDetails[0].roomCharge,
+#         'doctorFee': dischargeDetails[0].doctorFee,
+#         'OtherCharge': dischargeDetails[0].OtherCharge,
+#         'total': dischargeDetails[0].total,
+#     }
+#     return render_to_pdf('hospital/download_med_pdf.html', dict)
 
 
 @login_required(login_url='patientlogin')
